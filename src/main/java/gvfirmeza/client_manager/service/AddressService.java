@@ -1,5 +1,6 @@
 package gvfirmeza.client_manager.service;
 
+import gvfirmeza.client_manager.exceptions.AddressNotFoundException;
 import gvfirmeza.client_manager.model.Address;
 import gvfirmeza.client_manager.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class AddressService {
 
     public Address updateAddress(Long id, Address addressDetails) {
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Endereço não encontrado com o id: " + id));
+                .orElseThrow(() -> new AddressNotFoundException("Endereço não encontrado com o id: " + id));
 
         address.setRua(addressDetails.getRua());
         address.setNumero(addressDetails.getNumero());
@@ -44,7 +45,7 @@ public class AddressService {
         if (addressRepository.existsById(id)) {
             addressRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Endereço não encontrado com o id: " + id);
+            throw new AddressNotFoundException("Endereço não encontrado com o id: " + id);
         }
     }
 }

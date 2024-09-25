@@ -1,5 +1,6 @@
 package gvfirmeza.client_manager.service;
 
+import gvfirmeza.client_manager.exceptions.*;
 import gvfirmeza.client_manager.model.Client;
 import gvfirmeza.client_manager.repository.ClientRepository;
 import jakarta.validation.Valid;
@@ -19,14 +20,14 @@ public class ClientService {
 
     public Client addClient(@Valid Client client) {
         if (clientRepository.existsByEmail(client.getEmail())) {
-            throw new IllegalArgumentException("O email já está em uso.");
+            throw new EmailAlreadyInUseException("O email já está em uso.");
         }
         if (clientRepository.existsByCpf(client.getCpf())) {
-            throw new IllegalArgumentException("O CPF já está em uso.");
+            throw new CpfAlreadyInUseException("O CPF já está em uso.");
         }
 
         if (Period.between(client.getDataNascimento(), LocalDate.now()).getYears() < 18) {
-            throw new IllegalArgumentException("O cliente deve ter no mínimo 18 anos.");
+            throw new UnderageClientException("O cliente deve ter no mínimo 18 anos.");
         }
 
         return clientRepository.save(client);
@@ -34,7 +35,7 @@ public class ClientService {
 
     public Client updateClient(Long id, @Valid Client clientDetails) {
         Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado com o id: " + id));
+                .orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado com o id: " + id));
 
         client.setNome(clientDetails.getNome());
         client.setEmail(clientDetails.getEmail());
@@ -57,7 +58,7 @@ public class ClientService {
         if (clientRepository.existsById(id)) {
             clientRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Cliente não encontrado com o id: " + id);
+            throw new ClientNotFoundException("Cliente não encontrado com o id: " + id);
         }
     }
 }
