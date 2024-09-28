@@ -124,7 +124,7 @@
 
 ### 6. **Criar um Endereço**
 - **Método**: `POST`
-- **URL**: `http://localhost:8080/api/enderecos`
+- **URL**: `http://localhost:8080/api/enderecos/{idCliente}`
 - **Título**: Criar Endereço
 - **Exemplo de JSON**:
 

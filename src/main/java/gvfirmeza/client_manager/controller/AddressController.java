@@ -15,9 +15,9 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
-    @PostMapping
-    public ResponseEntity<Address> createAddress(@RequestBody Address address) {
-        Address newAddress = addressService.addAddress(address);
+    @PostMapping("/{clientId}")
+    public ResponseEntity<Address> createAddress(@PathVariable Long clientId, @RequestBody Address address) {
+        Address newAddress = addressService.addAddress(clientId, address);
         return ResponseEntity.ok(newAddress);
     }
 

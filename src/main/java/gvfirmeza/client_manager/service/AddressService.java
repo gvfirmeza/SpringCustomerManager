@@ -1,8 +1,11 @@
 package gvfirmeza.client_manager.service;
 
 import gvfirmeza.client_manager.exceptions.AddressNotFoundException;
+import gvfirmeza.client_manager.exceptions.ClientNotFoundException;
 import gvfirmeza.client_manager.model.Address;
+import gvfirmeza.client_manager.model.Client;
 import gvfirmeza.client_manager.repository.AddressRepository;
+import gvfirmeza.client_manager.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,15 @@ public class AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
-    public Address addAddress(Address address) {
+    @Autowired
+    private ClientRepository clientRepository;
+
+    public Address addAddress(Long clientId, Address address) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado com o id: " + clientId));
+
+        address.setCliente(client);
+
         return addressRepository.save(address);
     }
 
